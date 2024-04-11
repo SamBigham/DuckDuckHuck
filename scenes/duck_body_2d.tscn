@@ -84,7 +84,7 @@ script = ExtResource("1_16jss")
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 position = Vector2(28, 59)
-scale = Vector2(2.03125, 2.5)
+scale = Vector2(2.00305, 2.5)
 sprite_frames = SubResource("SpriteFrames_n5dgl")
 animation = &"idle"
 autoplay = "idle"
@@ -98,13 +98,28 @@ shape = SubResource("RectangleShape2D_yijgt")
 [node name="Sprite2D2" type="Sprite2D" parent="."]
 visible = false
 texture_filter = 1
-position = Vector2(28, 59)
-scale = Vector2(1.875, 1.75)
+position = Vector2(27, 58)
+scale = Vector2(2.1, 1.96)
 texture = ExtResource("4_cp230")
-offset = Vector2(-2.13333, -16.5714)
+offset = Vector2(-0.704759, -13.5102)
 
 [node name="Sprite2D3" type="Sprite2D" parent="Sprite2D2"]
-position = Vector2(-6.93333, -18.8571)
+position = Vector2(-10.9524, -16.3265)
 scale = Vector2(1.0875, 1.11429)
 texture = ExtResource("5_8kdin")
-offset = Vector2(0.275863, 1.53846)
+offset = Vector2(5.18008, 1.5385)
+
+[node name="backward" type="Sprite2D" parent="."]
+visible = false
+texture_filter = 1
+position = Vector2(26.1954, 57.3406)
+scale = Vector2(-2.1, 1.96)
+texture = ExtResource("4_cp230")
+offset = Vector2(8.70543, -12.7974)
+
+[node name="otherbackwards" type="Sprite2D" parent="backward"]
+position = Vector2(-0.859331, 1.86705)
+scale = Vector2(1.0875, 1.11429)
+texture = ExtResource("5_8kdin")
+offset = Vector2(5.27591, -14.2256)
+flip_h = true
