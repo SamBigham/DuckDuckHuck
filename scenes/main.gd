@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var packed = $Path2D.curve.get_baked_points()
 @onready var path = $Path2D
+@onready var char1 = $character1
 @onready var spriteloc = $DuckBody2D  #location bezier curve starts from
 @onready var savepoint = $savepoint
 @onready var timlab = $timelabel
@@ -154,7 +155,9 @@ func _on_savepoint_timeout():
 
 
 func _on_fris_path_body_entered(body):
-	if (body.is_in_group("characters") and !inDuck):
+	if body.is_in_group("characters") and !body.is_in_group("maincharacter"):
+		print("sidecharacter")
+	if ((body.is_in_group("characters") and body.is_in_group("maincharacter")) and !inDuck):
 		print("catch")
 		frisbeetrail.visible = false
 		frisbeetrail.position = Vector2(0,0)
@@ -167,9 +170,19 @@ func hold_frisbee():
 	inDuck = true
 
 	
-
+func lastbezloc():
+	if bezierpack3.size() > 1:
+		return bezierpack3[bezierpack3.size() -1]
+	else:
+		return null
 # Will use as a toggle to prevent the disc from being caught immediately
 # May have issues with rotating and collision if collision object also rotates
 func _on_fris_path_body_exited(body):
-	if (body.is_in_group("characters")):
+	if (body.is_in_group("characters") and body.is_in_group("maincharacter")):
 		inDuck = false
+
+
+func _on_border_body_entered(body):
+	if body.is_in_group("characters") and !body.is_in_group("maincharacter"):
+		char1.changedir()
+		

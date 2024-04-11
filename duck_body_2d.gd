@@ -18,6 +18,8 @@ func _ready():
 func _physics_process(delta):
 		
 	var direction = Input.get_axis("left", "right")
+	
+	#if no disc is visible
 	if !fris.is_visible_in_tree():
 		hasDisc = 0
 		
@@ -36,6 +38,7 @@ func _physics_process(delta):
 			backfris.rotation = 0
 			
 			
+		#controls running animation of duck
 		if velocity.x > 1 || velocity.x < -1 :
 			Duck.animation = "running"
 			if velocity.x > 1:
@@ -44,16 +47,19 @@ func _physics_process(delta):
 				Duck.flip_h = true
 		else:
 			Duck.animation = "idle"
+		
+		#up and down movement for duck
 		if Input.is_action_pressed("up"):
-			velocity.y = UP_SPEED * 1.5 + 0 *delta
+			velocity.y = UP_SPEED * 1.5 *50*delta
 		else: if Input.is_action_pressed("down"):
-			velocity.y = UP_SPEED * -1.5
+			velocity.y = UP_SPEED * -1.5 *50* delta
 		else : 
 			velocity.y = 0
 		if direction:
 			velocity.x = direction * SPEED
 		else:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
+	#if the disc is visible, controls pivot
 	else:
 		hasDisc = 1
 		Duck.animation = "idle"
@@ -66,24 +72,22 @@ func _physics_process(delta):
 		
 		
 
-		if Input.is_action_just_pressed("up") and !Duck.flip_h:
+		if Input.is_action_just_pressed("down") and !Duck.flip_h:
 			if originalpos:
 				fris.position = originalpos
 			Duck.flip_h = true
 			backfris.visible = true
 			originalpos = fris.position
 			fris.position = BIGNUMBER
-			
-#			fris.apply_scale(Vector2(-1,1))
-
-		if Input.is_action_just_pressed("down") and Duck.flip_h:
+		else: if Input.is_action_just_pressed("down") and Duck.flip_h:
 			Duck.flip_h = false
 			backfris.visible = false
 			if originalpos:
 				fris.position = originalpos
-			print(originalpos)
 			
-#		wing.rotate(direction / 100)
+	
+	
+	#moves duck
 	move_and_slide()
 
 

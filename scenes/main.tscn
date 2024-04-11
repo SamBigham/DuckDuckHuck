@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://ko7fboiix8tb"]
+[gd_scene load_steps=8 format=3 uid="uid://ko7fboiix8tb"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_417gq"]
 [ext_resource type="PackedScene" uid="uid://cl66fybrofm8o" path="res://scenes/border.tscn" id="1_re7to"]
 [ext_resource type="Texture2D" uid="uid://djnfnivycvylm" path="res://assets/Mac.png" id="1_skl6u"]
 [ext_resource type="PackedScene" uid="uid://xm2eevqwdhho" path="res://scenes/duck_body_2d.tscn" id="2_bphel"]
 [ext_resource type="PackedScene" uid="uid://dg3cwxhig8mb4" path="res://scenes/fris_path.tscn" id="4_7qvov"]
+[ext_resource type="Script" path="res://scenes/characters.gd" id="6_pds1h"]
 
 [sub_resource type="Curve2D" id="Curve2D_m0tbu"]
 bake_interval = 20.0
@@ -25,7 +26,7 @@ position = Vector2(589, 189)
 [node name="border" parent="." instance=ExtResource("1_re7to")]
 position = Vector2(204, -24)
 
-[node name="DuckBody2D" parent="." groups=["characters"] instance=ExtResource("2_bphel")]
+[node name="DuckBody2D" parent="." groups=["characters", "maincharacter"] instance=ExtResource("2_bphel")]
 position = Vector2(287, 298)
 
 [node name="Path2D" type="Path2D" parent="."]
@@ -53,6 +54,11 @@ one_shot = true
 wait_time = 0.1
 one_shot = true
 
+[node name="character1" parent="." groups=["characters"] instance=ExtResource("2_bphel")]
+position = Vector2(419, 459)
+script = ExtResource("6_pds1h")
+
+[connection signal="body_entered" from="border" to="." method="_on_border_body_entered"]
 [connection signal="body_entered" from="Path2D/PathFollow2D/FrisPath" to="." method="_on_fris_path_body_entered"]
 [connection signal="body_exited" from="Path2D/PathFollow2D/FrisPath" to="." method="_on_fris_path_body_exited"]
 [connection signal="timeout" from="savepoint" to="." method="_on_savepoint_timeout"]

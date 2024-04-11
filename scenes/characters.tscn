@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://bbjeggpmrj6j5"]
+
+[ext_resource type="PackedScene" uid="uid://xm2eevqwdhho" path="res://scenes/duck_body_2d.tscn" id="1_gb0vf"]
+[ext_resource type="Script" path="res://scenes/characters.gd" id="2_x8qom"]
+
+[node name="DuckBody2D" instance=ExtResource("1_gb0vf")]
+script = ExtResource("2_x8qom")
