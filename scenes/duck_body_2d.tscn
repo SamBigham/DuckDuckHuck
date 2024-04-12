@@ -1,10 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://xm2eevqwdhho"]
+[gd_scene load_steps=20 format=3 uid="uid://xm2eevqwdhho"]
 
 [ext_resource type="Texture2D" uid="uid://u64ubs35t3n4" path="res://assets/Duckidle.png" id="1_8l5jy"]
 [ext_resource type="Script" path="res://duck_body_2d.gd" id="1_16jss"]
 [ext_resource type="Texture2D" uid="uid://dc15ecvt73ef7" path="res://assets/DuckRunning.png" id="2_0m003"]
-[ext_resource type="Texture2D" uid="uid://2h0wuscu0s71" path="res://assets/SingularFrisbee.png" id="4_cp230"]
-[ext_resource type="Texture2D" uid="uid://bu8bge0xied3f" path="res://assets/DuckWing.png" id="5_8kdin"]
+[ext_resource type="Texture2D" uid="uid://brsjc150r01e3" path="res://assets/DuckFrisbee.png" id="4_twrgh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ycwk7"]
 atlas = ExtResource("1_8l5jy")
@@ -78,6 +77,42 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yijgt"]
 size = Vector2(36, 68)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_xsir2"]
+atlas = ExtResource("4_twrgh")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mijl6"]
+atlas = ExtResource("4_twrgh")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mx1r3"]
+atlas = ExtResource("4_twrgh")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exv2g"]
+atlas = ExtResource("4_twrgh")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_s8jsu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xsir2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mijl6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mx1r3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exv2g")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="DuckBody2D" type="CharacterBody2D"]
 script = ExtResource("1_16jss")
 
@@ -88,38 +123,17 @@ scale = Vector2(2.00305, 2.5)
 sprite_frames = SubResource("SpriteFrames_n5dgl")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.505754
 offset = Vector2(-5.66154, -14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(18, 24)
 shape = SubResource("RectangleShape2D_yijgt")
 
-[node name="Sprite2D2" type="Sprite2D" parent="."]
+[node name="Sprite2D2" type="AnimatedSprite2D" parent="."]
 visible = false
 texture_filter = 1
 position = Vector2(27, 58)
-scale = Vector2(2.1, 1.96)
-texture = ExtResource("4_cp230")
-offset = Vector2(-0.704759, -13.5102)
-
-[node name="Sprite2D3" type="Sprite2D" parent="Sprite2D2"]
-position = Vector2(-10.9524, -16.3265)
-scale = Vector2(1.0875, 1.11429)
-texture = ExtResource("5_8kdin")
-offset = Vector2(5.18008, 1.5385)
-
-[node name="backward" type="Sprite2D" parent="."]
-visible = false
-texture_filter = 1
-position = Vector2(26.1954, 57.3406)
-scale = Vector2(-2.1, 1.96)
-texture = ExtResource("4_cp230")
-offset = Vector2(8.70543, -12.7974)
-
-[node name="otherbackwards" type="Sprite2D" parent="backward"]
-position = Vector2(-0.859331, 1.86705)
-scale = Vector2(1.0875, 1.11429)
-texture = ExtResource("5_8kdin")
-offset = Vector2(5.27591, -14.2256)
-flip_h = true
+scale = Vector2(2.1, 2.50429)
+sprite_frames = SubResource("SpriteFrames_s8jsu")
+autoplay = "default"
+offset = Vector2(-4.51428, -13.5102)

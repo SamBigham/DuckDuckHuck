@@ -1,10 +1,137 @@
-[gd_scene load_steps=3 format=3 uid="uid://bbjeggpmrj6j5"]
+[gd_scene load_steps=20 format=3 uid="uid://bbjeggpmrj6j5"]
 
-[ext_resource type="PackedScene" uid="uid://xm2eevqwdhho" path="res://scenes/duck_body_2d.tscn" id="1_gb0vf"]
+[ext_resource type="Texture2D" uid="uid://c4hit52oxuu1u" path="res://assets/WhiteDuckidle.png" id="2_pkd8r"]
+[ext_resource type="Texture2D" uid="uid://d4jm72elwv736" path="res://assets/WhiteDuckFrisbee.png" id="2_r68v2"]
+[ext_resource type="Texture2D" uid="uid://vb4a548l022a" path="res://assets/WhiteDuckRunning.png" id="2_ujlop"]
 [ext_resource type="Script" path="res://scenes/characters.gd" id="2_x8qom"]
 
-[node name="DuckBody2D" instance=ExtResource("1_gb0vf")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_xjtdr"]
+atlas = ExtResource("2_pkd8r")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nj42y"]
+atlas = ExtResource("2_pkd8r")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqpu7"]
+atlas = ExtResource("2_pkd8r")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_evqm6"]
+atlas = ExtResource("2_pkd8r")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3nsm8"]
+atlas = ExtResource("2_ujlop")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nmir5"]
+atlas = ExtResource("2_ujlop")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mb1ip"]
+atlas = ExtResource("2_ujlop")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1gvf7"]
+atlas = ExtResource("2_ujlop")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vo1ev"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xjtdr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nj42y")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_gqpu7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_evqm6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3nsm8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nmir5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mb1ip")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1gvf7")
+}],
+"loop": true,
+"name": &"running",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_48noh"]
+radius = 15.0333
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q75jg"]
+atlas = ExtResource("2_r68v2")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7lwut"]
+atlas = ExtResource("2_r68v2")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e0cs3"]
+atlas = ExtResource("2_r68v2")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w8jda"]
+atlas = ExtResource("2_r68v2")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0gku5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q75jg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7lwut")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e0cs3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w8jda")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="CharBody2D" type="CharacterBody2D"]
+scale = Vector2(1.5116, 1.93312)
 script = ExtResource("2_x8qom")
 
-[node name="Sprite2D" parent="." index="0"]
-modulate = Color(0, 0.823529, 0.635294, 1)
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-39.693, 39.3147)
+sprite_frames = SubResource("SpriteFrames_vo1ev")
+animation = &"running"
+autoplay = "default"
+offset = Vector2(39.693, -39.3147)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_48noh")
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="."]
+visible = false
+texture_filter = 1
+position = Vector2(43, 25)
+sprite_frames = SubResource("SpriteFrames_0gku5")
+autoplay = "default"
+offset = Vector2(-43, -25)

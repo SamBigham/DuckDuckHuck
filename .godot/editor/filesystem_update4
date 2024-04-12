@@ -5,3 +5,6 @@ res://scenes/fris_path.tscn
 res://scenes/duck_body_2d.tscn
 res://scenes/characters.tscn
 res://scenes/border.tscn
+res://duck_body_2d.gd
+res://scenes/main.gd
+res://scenes/fris_path.gd

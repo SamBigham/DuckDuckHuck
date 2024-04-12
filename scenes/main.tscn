@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://djnfnivycvylm" path="res://assets/Mac.png" id="1_skl6u"]
 [ext_resource type="PackedScene" uid="uid://xm2eevqwdhho" path="res://scenes/duck_body_2d.tscn" id="2_bphel"]
 [ext_resource type="PackedScene" uid="uid://dg3cwxhig8mb4" path="res://scenes/fris_path.tscn" id="4_7qvov"]
-[ext_resource type="Script" path="res://scenes/characters.gd" id="6_pds1h"]
+[ext_resource type="PackedScene" uid="uid://bbjeggpmrj6j5" path="res://scenes/characters.tscn" id="7_wojsk"]
 
 [sub_resource type="Curve2D" id="Curve2D_m0tbu"]
 bake_interval = 20.0
@@ -54,9 +54,10 @@ one_shot = true
 wait_time = 0.1
 one_shot = true
 
-[node name="character1" parent="." groups=["characters"] instance=ExtResource("2_bphel")]
-position = Vector2(419, 459)
-script = ExtResource("6_pds1h")
+[node name="char" parent="." groups=["characters"] instance=ExtResource("7_wojsk")]
+position = Vector2(104, 456)
+scale = Vector2(4, 5.114)
+collision_layer = 9
 
 [connection signal="body_entered" from="border" to="." method="_on_border_body_entered"]
 [connection signal="body_entered" from="Path2D/PathFollow2D/FrisPath" to="." method="_on_fris_path_body_entered"]

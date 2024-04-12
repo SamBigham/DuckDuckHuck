@@ -8,7 +8,9 @@ extends Area2D
 @onready var frisbee = $Sprite2D
 @export var floaty = 2
 
+
 var l = 0
+var moving = false
 
 func _ready():
 	pass # Replace with function body.
@@ -23,15 +25,18 @@ func _process(delta):
 	 + (path_follow.get_progress_ratio() / floaty ) ) )
 	#when frisbee completes path move is set back to false
 	if path_follow.get_progress_ratio() == 1 or path_follow.get_progress_ratio() == 0:
+		moving = false
 		frisbee.animation = "default"
 	else:
+		moving = true
 		frisbee.animation = "forward"
 
 func _on_savepoint_timeout():
 	pass
 
-func _input(event: InputEvent) -> void:
-	pass
+
+#func _input(event: InputEvent) -> void:
+#	pass
 #	if event.is_action_released("click"):
 #		move = true
 

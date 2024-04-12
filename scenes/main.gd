@@ -2,7 +2,7 @@ extends Node2D
 
 @onready var packed = $Path2D.curve.get_baked_points()
 @onready var path = $Path2D
-@onready var char1 = $character1
+@onready var char1 = $char
 @onready var spriteloc = $DuckBody2D  #location bezier curve starts from
 @onready var savepoint = $savepoint
 @onready var timlab = $timelabel
@@ -18,6 +18,9 @@ extends Node2D
 @export var an = 1 #angle of points when creating on curve
 var p = 0 #used for recursion on bezier
 var inDuck = false
+var inBody = false
+var caught = false
+var BodyWithDisc
 
 var c = Color.RED #color of line
 var linelength = 10
@@ -37,14 +40,15 @@ func _process(_delta):
 	timlab.text = "%s" % savepoint.time_left #to display timeleft on the timer savepoint
 	
 	#starts frisbee path calculations
-	if(Input.is_action_just_pressed("click") and spriteloc.hasDisc):
+	#and (spriteloc.hasDisc or inBody)
+	if(Input.is_action_just_pressed("click") ):
 		savepoint.start() #limit for time to throw frisbee
 		mathsaver.start() #plays at a faster interval than savepoint
 		clearDrawing() 
 	if(Input.is_action_just_released("click") and (savepoint.time_left != 0)):
 		savepoint.stop() #either savepoint times out or click is released
-		calc()
-		
+		calc(BodyWithDisc)
+
 	#if character is moving, then the drawing is erased
 	if ((spriteloc.velocity.x != 0 or spriteloc.velocity.y != 0) and !spriteloc.hasDisc):
 		bezierpack3.clear()
@@ -62,12 +66,15 @@ func clearDrawing():
 	
 # this is a good place to put stuff that should be calculated when the curve is created and the
 # disc is moving
-func updateDrawing():
+func updateDrawing(bdy):
+	
+	#could be bugs related to this code... needs to be tested when two bodies are nearby
 	inDuck = true
+	inBody = true
 	frisbeetrail.visible = true
-	spriteloc.disc_invisible()
+	bdy.disc_invisible()
 	path.curve.clear_points()
-	timeoutcall()
+	timeoutcall(bdy)
 	
 func _draw():
 #	if packed.size() >= 2:
@@ -79,9 +86,11 @@ func _draw():
 		draw_multiline(bezierpack3,Color.AQUAMARINE,linelength)
 
 
-func timeoutcall():
+func timeoutcall(bdy):
+	
 	var mosloc = get_local_mouse_position()
-	var globloc = spriteloc.global_position + spriteoffs
+	#globloc controls where the frisbee starts
+	var globloc = bdy.global_position + spriteoffs
 	path.curve.add_point(globloc - offs, Vector2(an,an), Vector2(an,-an), 0)
 
 	if((globloc.y - mosloc.y >= 0) && globloc.x - mosloc.x <= 0) :
@@ -100,8 +109,6 @@ func timeoutcall():
 	for n in packed.size():
 		packed[n] = packed[n] + offs
 
-func _on_arctim_timeout():
-	timeoutcall()
 
 
 func save_click() :
@@ -132,17 +139,24 @@ func incbez(k):
 		p += slower
 	beziervec = bezier_help(k,p)
 	
-func calc():
-	if lastclick.size() != 0:
-		updateDrawing()
-		vectorreset()
-		for n in 100:
-			incbez(path.curve.get_point_count())
-			bezierpack3.push_back(beziervec + offs)
-		path.curve.clear_points()#path.curve is how we move
-		for n in bezierpack3.size():
-			path.curve.add_point(bezierpack3[n] - offs,Vector2(-an,an), Vector2(an,-an), n)
-		queue_redraw()
+func calc(bdy):
+	if lastclick.size() <= 1:
+		lastclick.push_back(bdy.global_position)
+		lastclick.push_back(get_local_mouse_position())
+	print(lastclick.size())
+#	if lastclick.size() != 0:
+		
+	#update drawing could be causing breif flashes of characters at the begginning
+	updateDrawing(bdy)
+	vectorreset()
+	for n in 100:
+		incbez(path.curve.get_point_count())
+		bezierpack3.push_back(beziervec + offs)
+	path.curve.clear_points()#path.curve is how we move
+	for n in bezierpack3.size():
+		path.curve.add_point(bezierpack3[n] - offs,Vector2(-an,an), Vector2(an,-an), n)
+	caught = false
+	queue_redraw()
 
 func _on_mathsaver_timeout():
 	if (!savepoint.is_stopped()):
@@ -150,25 +164,38 @@ func _on_mathsaver_timeout():
 		mathsaver.start()
 
 func _on_savepoint_timeout():
-	calc()
+	print("savepoint timeout")
+	calc(BodyWithDisc)
 
 
 
 func _on_fris_path_body_entered(body):
-	if body.is_in_group("characters") and !body.is_in_group("maincharacter"):
+	if (body.is_in_group("characters") and !body.is_in_group("maincharacter")and !caught and !inDuck):
 		print("sidecharacter")
-	if ((body.is_in_group("characters") and body.is_in_group("maincharacter")) and !inDuck):
+		frisbeetrail.visible = false
+		BodyWithDisc = body
+		caught = true
+		frisbeetrail.position = Vector2(0,0)
+		char_hold_frisbee(body)
+	if ((body.is_in_group("characters") and body.is_in_group("maincharacter")) and !inDuck and !caught):
 		print("catch")
 		frisbeetrail.visible = false
+		caught = true
+		BodyWithDisc = body
 		frisbeetrail.position = Vector2(0,0)
 		hold_frisbee()
 		
 func hold_frisbee():
 	vectorreset()
 	queue_redraw()
-	spriteloc.disc_visible()
+	BodyWithDisc.disc_visible()
 	inDuck = true
-
+	
+func char_hold_frisbee(bdy):
+	vectorreset()
+	queue_redraw()
+	bdy.disc_visible()
+	inBody = true
 	
 func lastbezloc():
 	if bezierpack3.size() > 1:
@@ -180,7 +207,10 @@ func lastbezloc():
 func _on_fris_path_body_exited(body):
 	if (body.is_in_group("characters") and body.is_in_group("maincharacter")):
 		inDuck = false
-
+		inDuck = false
+	else: if(body.is_in_group("characters")):
+		inBody = false
+		inDuck = false
 
 func _on_border_body_entered(body):
 	if body.is_in_group("characters") and !body.is_in_group("maincharacter"):
