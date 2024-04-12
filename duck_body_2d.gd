@@ -90,7 +90,7 @@ func _physics_process(delta):
 	#moves duck
 	move_and_slide()
 
-
+#should replace with sprite copy but with disc
 func disc_visible():
 	if Duck.flip_h:
 		backfris.visible = true
