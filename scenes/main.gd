@@ -31,6 +31,7 @@ const spriteoffs = Vector2(27,25) #changes where everything starts
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	BodyWithDisc = spriteloc
 	vectorreset()
 	
 	
@@ -41,7 +42,7 @@ func _process(_delta):
 	
 	#starts frisbee path calculations
 	#and (spriteloc.hasDisc or inBody)
-	if(Input.is_action_just_pressed("click") ):
+	if(Input.is_action_just_pressed("click") and BodyWithDisc.hasDisc):
 		savepoint.start() #limit for time to throw frisbee
 		mathsaver.start() #plays at a faster interval than savepoint
 		clearDrawing() 

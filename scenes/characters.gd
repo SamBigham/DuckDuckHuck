@@ -6,12 +6,13 @@ extends CharacterBody2D
 @onready var node = $".."
 @onready var myspriteanim = $AnimatedSprite2D
 @onready var myspriteanimdisc = $AnimatedSprite2D2
+
 var pos = $".".position
 var spritenorm
 var bezend
 const SPEED = 15000.0
 const JUMP_VELOCITY = -400.0
-
+var hasDisc = 0
 
 
 func _ready():
@@ -53,12 +54,14 @@ func changedir():
 #	velocity.y = velocity.y * -1
 
 func disc_visible():
+	hasDisc = 1
 	if myspriteanim.flip_h:
 
 		myspriteanimdisc.visible = true
 		myspriteanim.visible = false
 		myspriteanimdisc.flip_h = true
 	else: 
+
 		myspriteanimdisc.flip_h = false
 #		if originalpos:
 #			fris.position = originalpos
@@ -66,6 +69,7 @@ func disc_visible():
 		myspriteanim.visible = false
 	
 func disc_invisible():
+	hasDisc = 0
 	myspriteanimdisc.visible = false
 	myspriteanim.visible = true
 	
