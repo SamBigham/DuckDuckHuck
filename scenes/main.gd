@@ -13,6 +13,8 @@ extends Node2D
 @onready var  bezierpack2 = PackedVector2Array() #used for recursion
 @onready var  bezierpack3 = PackedVector2Array() #where final bezier curve points are stored
 @onready var frisbeetrail = $Path2D/PathFollow2D/FrisPath
+@onready var pathfollow  = $Path2D/PathFollow2D
+@onready var chartimer = $chartimeout
 @onready var  beztrail
 @export var slower = 0.01 # used for bezier curve to make t value smaller
 @export var an = 1 #angle of points when creating on curve
@@ -41,7 +43,6 @@ func _process(_delta):
 	timlab.text = "%s" % savepoint.time_left #to display timeleft on the timer savepoint
 	
 	#starts frisbee path calculations
-	#and (spriteloc.hasDisc or inBody)
 	if(Input.is_action_just_pressed("click") and BodyWithDisc.hasDisc):
 		savepoint.start() #limit for time to throw frisbee
 		mathsaver.start() #plays at a faster interval than savepoint
@@ -61,7 +62,7 @@ func _process(_delta):
 	
 func clearDrawing():
 	path.curve.clear_points()
-	packed = $Path2D.curve.get_baked_points()
+	packed = path.curve.get_baked_points()
 	lastclick.clear()
 	queue_redraw()
 	
@@ -72,10 +73,11 @@ func updateDrawing(bdy):
 	#could be bugs related to this code... needs to be tested when two bodies are nearby
 	inDuck = true
 	inBody = true
-	frisbeetrail.visible = true
 	bdy.disc_invisible()
-	path.curve.clear_points()
+#	path.curve.clear_points()
 	timeoutcall(bdy)
+#	frisbeetrail.visible = true
+	frisbeetrail.visible = true
 	
 func _draw():
 #	if packed.size() >= 2:
@@ -106,9 +108,11 @@ func timeoutcall(bdy):
 	if (lastclick.size() != 1):
 		for n in lastclick.size():
 			path.curve.add_point(lastclick[n] - offs, Vector2(-an,an), Vector2(an,-an), n + 1)
-	packed = $Path2D.curve.get_baked_points()
-	for n in packed.size():
-		packed[n] = packed[n] + offs
+#	packed = path.curve.get_baked_points()
+#	for n in packed.size():
+#		packed[n] = packed[n] + offs
+	
+
 
 
 
@@ -144,7 +148,6 @@ func calc(bdy):
 	if lastclick.size() <= 1:
 		lastclick.push_back(bdy.global_position)
 		lastclick.push_back(get_local_mouse_position())
-	print(lastclick.size())
 #	if lastclick.size() != 0:
 		
 	#update drawing could be causing breif flashes of characters at the begginning
@@ -157,7 +160,13 @@ func calc(bdy):
 	for n in bezierpack3.size():
 		path.curve.add_point(bezierpack3[n] - offs,Vector2(-an,an), Vector2(an,-an), n)
 	caught = false
+	
+#	for l in lastclick.size():
+#		print(lastclick[l])
+#		print(path.curve.get_point_position(l))
+	
 	queue_redraw()
+#	print(bdy.get_groups())
 
 func _on_mathsaver_timeout():
 	if (!savepoint.is_stopped()):
@@ -173,13 +182,20 @@ func _on_savepoint_timeout():
 func _on_fris_path_body_entered(body):
 	if (body.is_in_group("characters") and !body.is_in_group("maincharacter")and !caught and !inDuck):
 		print("sidecharacter")
+		
 		frisbeetrail.visible = false
 		BodyWithDisc = body
 		caught = true
 		frisbeetrail.position = Vector2(0,0)
 		char_hold_frisbee(body)
+		
+		chartimer.start()
+		save_click()
+		mathsaver.start()
+		
 	if ((body.is_in_group("characters") and body.is_in_group("maincharacter")) and !inDuck and !caught):
 		print("catch")
+		
 		frisbeetrail.visible = false
 		caught = true
 		BodyWithDisc = body
@@ -206,6 +222,7 @@ func lastbezloc():
 # Will use as a toggle to prevent the disc from being caught immediately
 # May have issues with rotating and collision if collision object also rotates
 func _on_fris_path_body_exited(body):
+	
 	if (body.is_in_group("characters") and body.is_in_group("maincharacter")):
 		inDuck = false
 		inDuck = false
@@ -217,3 +234,28 @@ func _on_border_body_entered(body):
 	if body.is_in_group("characters") and !body.is_in_group("maincharacter"):
 		char1.changedir()
 		
+
+
+func _on_chartimeout_timeout():
+	savepoint.stop()
+
+	clearDrawing()
+	var thrower = BodyWithDisc.position
+	var target = spriteloc.global_position + offs
+#	var middleground = (target - thrower)
+
+	#flick
+	var ground = thrower.project(target)
+	#backhand
+#	var ground = target.project(thrower)
+	
+	lastclick.push_back(thrower)
+	lastclick.push_back(ground)
+	lastclick.push_back(target)
+	
+	
+	
+
+	
+	calc(BodyWithDisc)	
+	pathfollow.progress = 0

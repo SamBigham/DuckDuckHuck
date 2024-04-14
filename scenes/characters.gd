@@ -10,9 +10,10 @@ extends CharacterBody2D
 var pos = $".".position
 var spritenorm
 var bezend
-const SPEED = 15000.0
+const SPEED = 20000.0
 const JUMP_VELOCITY = -400.0
 var hasDisc = 0
+var vecspeed = Vector2(100,0)
 
 
 func _ready():
@@ -27,13 +28,16 @@ func _physics_process(delta):
 	if (bezend and frisbee.moving) and !myspriteanimdisc.visible:
 #		var mousepos = bezend
 		var direction = (bezend - position).normalized()
-		
+
 		velocity = direction * SPEED *delta
 		if (sprite.position > bezend - Vector2(10,10) and sprite.position < bezend + Vector2(10,10)):
 			velocity = Vector2(0,0)
-		
+	else: if (!myspriteanimdisc.visible):
+		velocity.x = vecspeed.x
+		velocity.y = 0
 	else:
 		velocity = velocity / 1.3
+
 #		velocity = Vector2(0,0)
 
 		
@@ -49,9 +53,7 @@ func _physics_process(delta):
 	move_and_slide()
 
 func changedir():
-	pass
-#	velocity.x = velocity.x * -1
-#	velocity.y = velocity.y * -1
+	vecspeed = vecspeed * -1
 
 func disc_visible():
 	hasDisc = 1

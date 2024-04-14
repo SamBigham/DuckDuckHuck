@@ -34,14 +34,16 @@ position = Vector2(0, -4)
 curve = SubResource("Curve2D_m0tbu")
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
-position = Vector2(347, 132)
+position = Vector2(597, 405)
 rotates = false
 cubic_interp = false
 loop = false
 
 [node name="FrisPath" parent="Path2D/PathFollow2D" instance=ExtResource("4_7qvov")]
-position = Vector2(180, 201)
+position = Vector2(86, 69)
 scale = Vector2(2.83145, 3.55438)
+collision_layer = 5
+collision_mask = 5
 
 [node name="timelabel" type="Label" parent="."]
 offset_right = 40.0
@@ -57,10 +59,15 @@ one_shot = true
 [node name="char" parent="." groups=["characters"] instance=ExtResource("7_wojsk")]
 position = Vector2(104, 456)
 scale = Vector2(4, 5.114)
-collision_layer = 9
+collision_layer = 4
+collision_mask = 5
+
+[node name="chartimeout" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="body_entered" from="border" to="." method="_on_border_body_entered"]
 [connection signal="body_entered" from="Path2D/PathFollow2D/FrisPath" to="." method="_on_fris_path_body_entered"]
 [connection signal="body_exited" from="Path2D/PathFollow2D/FrisPath" to="." method="_on_fris_path_body_exited"]
 [connection signal="timeout" from="savepoint" to="." method="_on_savepoint_timeout"]
 [connection signal="timeout" from="mathsaver" to="." method="_on_mathsaver_timeout"]
+[connection signal="timeout" from="chartimeout" to="." method="_on_chartimeout_timeout"]

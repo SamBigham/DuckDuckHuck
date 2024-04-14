@@ -11,16 +11,14 @@ extends Area2D
 
 var l = 0
 var moving = false
-
+@onready var path_follow = $".."
 func _ready():
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-
-	var path_follow = $".."
-
+	
 	path_follow.progress += (_speed * delta * (1 - path_follow.get_progress_ratio()
 	 + (path_follow.get_progress_ratio() / floaty ) ) )
 	#when frisbee completes path move is set back to false
