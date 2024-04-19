@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://bfsscrqk4m6tq"]
+
+[ext_resource type="Script" path="res://charpath.gd" id="1_iptgo"]
+[ext_resource type="Texture2D" uid="uid://dxcjxpwlvjpoe" path="res://assets/icon.svg" id="2_4k8mw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p434r"]
+size = Vector2(107, 120)
+
+[node name="charpathfinder" type="CharacterBody2D"]
+position = Vector2(1414, 385)
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_iptgo")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_4k8mw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, -2)
+shape = SubResource("RectangleShape2D_p434r")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+avoidance_enabled = true
+radius = 51.67
+debug_enabled = true
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.114

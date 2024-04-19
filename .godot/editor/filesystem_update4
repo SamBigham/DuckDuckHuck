@@ -1,9 +1,9 @@
 res://scenes/main.tscn
 res://scenes/characters.gdshader
-res://scenes/main.gd
-res://scenes/fris_path.tscn
-res://scenes/duck_body_2d.tscn
 res://scenes/characters.tscn
-res://scenes/border.tscn
+res://charpathfinder.tscn
+res://charpath.gd
+res://scenes/main.gd
 res://scenes/fris_path.gd
-res://scenes/characters.gd
+res://scenes/fris_path.tscn
+res://char_path.tscn

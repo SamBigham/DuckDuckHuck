@@ -115,6 +115,7 @@ animations = [{
 
 [node name="CharBody2D" type="CharacterBody2D"]
 scale = Vector2(1.5116, 1.93312)
+motion_mode = 1
 script = ExtResource("2_x8qom")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

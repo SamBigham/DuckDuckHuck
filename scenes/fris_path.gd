@@ -6,12 +6,12 @@ extends Area2D
 #@onready var move = false
 @onready var path = $"../.."
 @onready var frisbee = $Sprite2D
+@onready var path_follow = $".."
 @export var floaty = 2
 
 
 var l = 0
 var moving = false
-@onready var path_follow = $".."
 func _ready():
 	pass # Replace with function body.
 

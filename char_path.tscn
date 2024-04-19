@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://pm0cydfsljhm"]
+
+[ext_resource type="PackedScene" uid="uid://bfsscrqk4m6tq" path="res://charpathfinder.tscn" id="1_xpm27"]
+
+[sub_resource type="Curve2D" id="Curve2D_7hf1p"]
+
+[node name="CharPath" type="Path2D"]
+position = Vector2(59.9352, -130)
+rotation = 0.00485947
+curve = SubResource("Curve2D_7hf1p")
+
+[node name="CharPathFollow" type="PathFollow2D" parent="."]
+position = Vector2(679.273, -38)
+rotation = 1.45305
+rotates = false
+cubic_interp = false
+loop = false
+
+[node name="charpathfinder" parent="CharPathFollow" instance=ExtResource("1_xpm27")]
+position = Vector2(72.1863, 754.318)
+rotation = -1.46069

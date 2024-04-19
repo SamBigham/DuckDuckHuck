@@ -74,8 +74,9 @@ animations = [{
 "speed": 15.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_yijgt"]
-size = Vector2(36, 68)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c6n7h"]
+radius = 18.0
+height = 74.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xsir2"]
 atlas = ExtResource("4_twrgh")
@@ -127,7 +128,7 @@ offset = Vector2(-5.66154, -14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(18, 24)
-shape = SubResource("RectangleShape2D_yijgt")
+shape = SubResource("CapsuleShape2D_c6n7h")
 
 [node name="Sprite2D2" type="AnimatedSprite2D" parent="."]
 visible = false

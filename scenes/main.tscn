@@ -1,16 +1,18 @@
-[gd_scene load_steps=8 format=3 uid="uid://ko7fboiix8tb"]
+[gd_scene load_steps=9 format=3 uid="uid://ko7fboiix8tb"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_417gq"]
 [ext_resource type="PackedScene" uid="uid://cl66fybrofm8o" path="res://scenes/border.tscn" id="1_re7to"]
 [ext_resource type="Texture2D" uid="uid://djnfnivycvylm" path="res://assets/Mac.png" id="1_skl6u"]
 [ext_resource type="PackedScene" uid="uid://xm2eevqwdhho" path="res://scenes/duck_body_2d.tscn" id="2_bphel"]
 [ext_resource type="PackedScene" uid="uid://dg3cwxhig8mb4" path="res://scenes/fris_path.tscn" id="4_7qvov"]
+[ext_resource type="PackedScene" uid="uid://pm0cydfsljhm" path="res://char_path.tscn" id="7_bxdco"]
 [ext_resource type="PackedScene" uid="uid://bbjeggpmrj6j5" path="res://scenes/characters.tscn" id="7_wojsk"]
 
 [sub_resource type="Curve2D" id="Curve2D_m0tbu"]
 bake_interval = 20.0
 
 [node name="Node2D" type="Node2D"]
+scale = Vector2(1.00107, 1)
 script = ExtResource("1_417gq")
 
 [node name="mac" type="Sprite2D" parent="."]
@@ -25,9 +27,25 @@ position = Vector2(589, 189)
 
 [node name="border" parent="." instance=ExtResource("1_re7to")]
 position = Vector2(204, -24)
+collision_layer = 5
+collision_mask = 5
 
 [node name="DuckBody2D" parent="." groups=["characters", "maincharacter"] instance=ExtResource("2_bphel")]
-position = Vector2(287, 298)
+position = Vector2(288, 361)
+
+[node name="char" parent="." groups=["characters"] instance=ExtResource("7_wojsk")]
+position = Vector2(1120, 570)
+scale = Vector2(4, 5.114)
+collision_layer = 4
+collision_mask = 5
+
+[node name="stacksetter" parent="." groups=["characters", "stacksetter"] instance=ExtResource("7_wojsk")]
+modulate = Color(1, 0.407843, 0.329412, 1)
+position = Vector2(1245, 239)
+scale = Vector2(4, 5.114)
+collision_layer = 5
+collision_mask = 5
+wall_min_slide_angle = 0.127409
 
 [node name="Path2D" type="Path2D" parent="."]
 position = Vector2(0, -4)
@@ -49,6 +67,12 @@ collision_mask = 5
 offset_right = 40.0
 offset_bottom = 23.0
 
+[node name="FPS" type="Label" parent="."]
+offset_left = -223.761
+offset_top = -238.0
+offset_right = -104.761
+offset_bottom = -172.0
+
 [node name="savepoint" type="Timer" parent="."]
 one_shot = true
 
@@ -56,14 +80,15 @@ one_shot = true
 wait_time = 0.1
 one_shot = true
 
-[node name="char" parent="." groups=["characters"] instance=ExtResource("7_wojsk")]
-position = Vector2(104, 456)
-scale = Vector2(4, 5.114)
-collision_layer = 4
-collision_mask = 5
-
 [node name="chartimeout" type="Timer" parent="."]
 one_shot = true
+
+[node name="delay" type="Timer" parent="."]
+wait_time = 0.1
+
+[node name="CharPath" parent="." instance=ExtResource("7_bxdco")]
+visible = false
+position = Vector2(655.299, -101.998)
 
 [connection signal="body_entered" from="border" to="." method="_on_border_body_entered"]
 [connection signal="body_entered" from="Path2D/PathFollow2D/FrisPath" to="." method="_on_fris_path_body_entered"]
@@ -71,3 +96,4 @@ one_shot = true
 [connection signal="timeout" from="savepoint" to="." method="_on_savepoint_timeout"]
 [connection signal="timeout" from="mathsaver" to="." method="_on_mathsaver_timeout"]
 [connection signal="timeout" from="chartimeout" to="." method="_on_chartimeout_timeout"]
+[connection signal="timeout" from="delay" to="." method="_on_delay_timeout"]

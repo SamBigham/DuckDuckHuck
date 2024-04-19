@@ -1,7 +1,13 @@
+PathFollow2D
+Path2D
 Timer
+NavigationObstacle2D
+CollisionShape2D
+NavigationRegion2D
+Area2D
+MeshInstance2D
+NavigationAgent2D
+Sprite2D
 CharacterBody2D
 AnimatedSprite2D
-CollisionShape2D
-Sprite2D
 StaticBody2D
-Area2D
