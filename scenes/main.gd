@@ -150,10 +150,10 @@ func incbez(k):
 	
 	if (p > 1):
 		vectorreset()
-		p = 0
+		p = 0 + slower
 	else:
 		
-		p += slower 
+		p += 0.01
 	print(p)
 	beziervec = bezier_help(k,p)
 	
@@ -167,6 +167,7 @@ func calc(bdy):
 	updateDrawing(bdy)
 	vectorreset()
 	for n in 100:
+#		print(n)
 		incbez(path.curve.get_point_count())
 		bezierpack3.push_back(beziervec + offs)
 	path.curve.clear_points()#path.curve is how we move

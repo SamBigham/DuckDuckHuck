@@ -1,9 +1,7 @@
 res://scenes/main.tscn
 res://scenes/characters.gdshader
+res://scenes/main.gd
 res://scenes/characters.tscn
 res://charpathfinder.tscn
-res://charpath.gd
-res://scenes/main.gd
-res://scenes/fris_path.gd
 res://scenes/fris_path.tscn
 res://char_path.tscn
