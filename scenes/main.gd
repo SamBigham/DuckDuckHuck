@@ -1,5 +1,21 @@
 extends Node2D
 
+##TODO
+## add countdown for how long characters can hold frisbee ****
+## give npcs cutting routes
+## add different color ducks that don't change the color of the frisbee
+## add more npcs 
+## start screen
+## scores
+## time elapsed
+## halfs
+## cutting tricks
+## height to frisbee so it can't be caught on route
+## animations for foot blocks and hand block
+
+##reminders
+##func updateDrawing(bdy): around line 117 or so, inDuck = false might need to be true
+
 @onready var packed = $Path2D.curve.get_baked_points()
 @onready var path = $Path2D
 @onready var char1 = $char
@@ -7,7 +23,9 @@ extends Node2D
 @onready var savepoint = $savepoint
 @onready var timlab = $timelabel
 @onready var FPS = $FPS
+@onready var Stall = $Stall
 @onready var mathsaver = $mathsaver
+@onready var StallTimer = $stalltimer
 @onready var lastclick = Array()
 @onready var  beziervec
 @onready var  bezierpack = PackedVector2Array()
@@ -18,6 +36,7 @@ extends Node2D
 @onready var chartimer = $chartimeout
 @onready var delay = $delay
 @onready var  beztrail
+@onready var stalltimeout = $"stall timeout"
 
 #slower could be causing trail to get less and less each time
 @export var slower = 0.01 # used for bezier curve to make t value smaller
@@ -33,6 +52,8 @@ var BodyWithDisc
 var c = Color.RED #color of line
 var linelength = 10
 
+var StallNum = 9
+
 const offs = Vector2(0,0) #adds to  where object leaves from
 const spriteoffs = Vector2(0,0) #changes where everything starts
 
@@ -41,14 +62,26 @@ const spriteoffs = Vector2(0,0) #changes where everything starts
 func _ready():
 	originalpacked = packed
 	BodyWithDisc = spriteloc
+	stalltimeout.visible = false
 	vectorreset()
 	
 	
 func _process(_delta):
 #	print(get_canvas_item())
 #	print(path.get_canvas_item())
-	timlab.text = "%s" % savepoint.time_left #to display timeleft on the timer savepoint
+	timlab.text = "%s" % int(savepoint.time_left) #to display timeleft on the timer savepoint
 	FPS.text ="%s" % Engine.get_frames_per_second()
+	
+	##stalltimer for how long till stall. 
+	
+	if StallTimer.time_left != 0:
+		Stall.visible = true
+		stalltimeout.visible = false
+		Stall.text = "%s" % (StallNum - int(StallTimer.time_left))
+		
+	else:
+		Stall.visible = false
+	
 	
 	#starts frisbee path calculations
 	if(Input.is_action_just_pressed("click") and BodyWithDisc.hasDisc):
@@ -57,8 +90,10 @@ func _process(_delta):
 		clearDrawing() 
 	if(Input.is_action_just_released("click") and (savepoint.time_left != 0)):
 		savepoint.stop() #either savepoint times out or click is released
+		
+		StallTimer.stop()
 		calc(BodyWithDisc)
-
+		
 	#if character is moving, then the drawing is erased
 	if ((spriteloc.velocity.x != 0 or spriteloc.velocity.y != 0) and !spriteloc.hasDisc):
 		bezierpack3.clear()
@@ -80,7 +115,7 @@ func clearDrawing():
 func updateDrawing(bdy):
 	
 	#could be bugs related to this code... needs to be tested when two bodies are nearby
-	inDuck = true
+	inDuck = false
 	inBody = true
 	bdy.disc_invisible()
 #	path.curve.clear_points()
@@ -154,7 +189,7 @@ func incbez(k):
 	else:
 		
 		p += 0.01
-	print(p)
+	#print(p)
 	beziervec = bezier_help(k,p)
 	
 func calc(bdy):
@@ -190,14 +225,14 @@ func _on_savepoint_timeout():
 
 
 func _on_fris_path_body_entered(body):
-#	print("caught: ", caught)
-#	print("inDuck: ", inDuck)
+
 
 	
 	if !frisbeetrail.visible:
 		caught = true
 	else:
 		caught = false
+		
 #	print("wait ", wait)
 
 	if ((body.is_in_group("characters") and !body.is_in_group("maincharacter"))and !wait and !inDuck and !caught):
@@ -206,6 +241,7 @@ func _on_fris_path_body_entered(body):
 		frisbeetrail.visible = false
 		BodyWithDisc = body
 		caught = false
+		
 		wait = true
 		delay.start()
 		frisbeetrail.position = Vector2(0,0)
@@ -220,6 +256,7 @@ func _on_fris_path_body_entered(body):
 		
 		frisbeetrail.visible = false
 		caught = false
+		
 		wait = true
 		delay.start()
 		BodyWithDisc = body
@@ -231,11 +268,13 @@ func hold_frisbee():
 	queue_redraw()
 	BodyWithDisc.disc_visible()
 	inDuck = true
+	StallTimer.start()
 	
 func char_hold_frisbee(bdy):
 	vectorreset()
 	queue_redraw()
 	bdy.disc_visible()
+	StallTimer.start()
 	inBody = true
 	
 func lastbezloc():
@@ -248,7 +287,6 @@ func lastbezloc():
 func _on_fris_path_body_exited(body):
 	
 	if (body.is_in_group("characters") and body.is_in_group("maincharacter")):
-		inDuck = false
 		inDuck = false
 	else: if(body.is_in_group("characters")):
 		inBody = false
@@ -270,7 +308,7 @@ func _on_chartimeout_timeout():
 
 	#flick
 	var ground = thrower.project(target)
-	
+	StallTimer.stop()
 	#backhand
 #	var ground = target.project(thrower)
 	
@@ -288,3 +326,8 @@ func _on_chartimeout_timeout():
 
 func _on_delay_timeout():
 	wait = false
+
+
+func _on_stalltimer_timeout() -> void:
+	stalltimeout.visible = true
+	print("timeout")

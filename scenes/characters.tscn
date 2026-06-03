@@ -74,8 +74,10 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_48noh"]
-radius = 15.0333
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6ohqy"]
+custom_solver_bias = 0.977
+radius = 8.60016
+height = 23.7957
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q75jg"]
 atlas = ExtResource("2_r68v2")
@@ -127,7 +129,8 @@ autoplay = "default"
 offset = Vector2(39.693, -39.3147)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_48noh")
+position = Vector2(-0.661551, 0.517298)
+shape = SubResource("CapsuleShape2D_6ohqy")
 
 [node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="."]
 visible = false

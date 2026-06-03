@@ -1,17 +1,17 @@
-[gd_scene load_steps=9 format=3 uid="uid://ko7fboiix8tb"]
+[gd_scene load_steps=8 format=3 uid="uid://ko7fboiix8tb"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_417gq"]
 [ext_resource type="PackedScene" uid="uid://cl66fybrofm8o" path="res://scenes/border.tscn" id="1_re7to"]
 [ext_resource type="Texture2D" uid="uid://djnfnivycvylm" path="res://assets/Mac.png" id="1_skl6u"]
 [ext_resource type="PackedScene" uid="uid://xm2eevqwdhho" path="res://scenes/duck_body_2d.tscn" id="2_bphel"]
 [ext_resource type="PackedScene" uid="uid://dg3cwxhig8mb4" path="res://scenes/fris_path.tscn" id="4_7qvov"]
-[ext_resource type="PackedScene" uid="uid://pm0cydfsljhm" path="res://char_path.tscn" id="7_bxdco"]
 [ext_resource type="PackedScene" uid="uid://bbjeggpmrj6j5" path="res://scenes/characters.tscn" id="7_wojsk"]
 
 [sub_resource type="Curve2D" id="Curve2D_m0tbu"]
 bake_interval = 20.0
 
 [node name="Node2D" type="Node2D"]
+position = Vector2(-21, 0)
 scale = Vector2(1.00107, 1)
 script = ExtResource("1_417gq")
 
@@ -36,8 +36,17 @@ position = Vector2(288, 361)
 [node name="char" parent="." groups=["characters"] instance=ExtResource("7_wojsk")]
 position = Vector2(1120, 570)
 scale = Vector2(4, 5.114)
-collision_layer = 4
+collision_layer = 5
 collision_mask = 5
+wall_min_slide_angle = 0.0
+
+[node name="cutter" parent="." groups=["characters"] instance=ExtResource("7_wojsk")]
+modulate = Color(1, 0.305882, 0, 1)
+position = Vector2(868.071, 419)
+scale = Vector2(4, 5.114)
+collision_layer = 5
+collision_mask = 5
+wall_min_slide_angle = 3.11192
 
 [node name="stacksetter" parent="." groups=["characters", "stacksetter"] instance=ExtResource("7_wojsk")]
 modulate = Color(1, 0.407843, 0.329412, 1)
@@ -45,7 +54,7 @@ position = Vector2(1245, 239)
 scale = Vector2(4, 5.114)
 collision_layer = 5
 collision_mask = 5
-wall_min_slide_angle = 0.127409
+wall_min_slide_angle = 0.0
 
 [node name="Path2D" type="Path2D" parent="."]
 position = Vector2(0, -4)
@@ -64,14 +73,34 @@ collision_layer = 5
 collision_mask = 5
 
 [node name="timelabel" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = -29.9679
+offset_top = -180.0
+offset_right = 10.0321
+offset_bottom = -157.0
+scale = Vector2(4.59509, 3.07932)
 
 [node name="FPS" type="Label" parent="."]
 offset_left = -223.761
 offset_top = -238.0
 offset_right = -104.761
 offset_bottom = -172.0
+
+[node name="Stall" type="Label" parent="."]
+texture_filter = 1
+offset_left = 185.801
+offset_top = -215.0
+offset_right = 225.801
+offset_bottom = -192.0
+scale = Vector2(4.71602, 6)
+
+[node name="stall timeout" type="Label" parent="."]
+texture_filter = 5
+offset_left = 207.778
+offset_top = 196.0
+offset_right = 284.778
+offset_bottom = 237.0
+scale = Vector2(10.3324, 6.25898)
+text = "Timeout"
 
 [node name="savepoint" type="Timer" parent="."]
 one_shot = true
@@ -81,14 +110,15 @@ wait_time = 0.1
 one_shot = true
 
 [node name="chartimeout" type="Timer" parent="."]
+wait_time = 3.0
 one_shot = true
 
 [node name="delay" type="Timer" parent="."]
 wait_time = 0.1
 
-[node name="CharPath" parent="." instance=ExtResource("7_bxdco")]
-visible = false
-position = Vector2(655.299, -101.998)
+[node name="stalltimer" type="Timer" parent="."]
+wait_time = 9.0
+one_shot = true
 
 [connection signal="body_entered" from="border" to="." method="_on_border_body_entered"]
 [connection signal="body_entered" from="Path2D/PathFollow2D/FrisPath" to="." method="_on_fris_path_body_entered"]
@@ -97,3 +127,4 @@ position = Vector2(655.299, -101.998)
 [connection signal="timeout" from="mathsaver" to="." method="_on_mathsaver_timeout"]
 [connection signal="timeout" from="chartimeout" to="." method="_on_chartimeout_timeout"]
 [connection signal="timeout" from="delay" to="." method="_on_delay_timeout"]
+[connection signal="timeout" from="stalltimer" to="." method="_on_stalltimer_timeout"]

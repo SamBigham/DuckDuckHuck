@@ -37,4 +37,3 @@ func _on_savepoint_timeout():
 #	pass
 #	if event.is_action_released("click"):
 #		move = true
-
